@@ -1,6 +1,6 @@
-﻿using EntitiesDB.EF;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MidChat.BLL.Interfeces;
+using MidChat.BLL.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,19 +9,19 @@ using System.Threading.Tasks;
 
 namespace MidChat.BLL.Repositories
 {
-    public class DbSetRepository<T> : IRepository<T> where T :class
+    public abstract class DbSetRepository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-        protected readonly DbSet<T> dbSet;
+        protected readonly DbSet<TEntity> dbSet;
 
-        protected readonly MainDbContext dbContext;
+        protected readonly DbContext dbContext;
 
-        public DbSetRepository(MainDbContext dbContext)
+        public DbSetRepository(AppDbContext dbContext)
         {
             this.dbContext = dbContext;
-            dbSet = dbContext.Set<T>();
+            dbSet = dbContext.Set<TEntity>();
         }
 
-        public virtual async Task Create(T entity)
+        public virtual async Task Add(TEntity entity)
         {
             await dbSet.AddAsync(entity);
         }
@@ -33,25 +33,21 @@ namespace MidChat.BLL.Repositories
                 dbSet.Remove(entity);
         }
 
-        public virtual async Task<T> Get(int id)
+        public virtual async Task<TEntity> Get(int id)
         {
             var entity = await dbSet.FindAsync(id);
             return entity;
         }
 
-        public virtual IQueryable<T> GetAll()
+        public virtual IQueryable<TEntity> GetAll()
         {
             return dbSet;
         }
 
-        public virtual void Update(T entity)
+        public virtual void Update(TEntity entity)
         {
-            dbContext.Entry(entity).State = EntityState.Modified;
-        }
-
-        public virtual IQueryable<T> Find(Func<T, Boolean> entity)
-        {
-            return (IQueryable<T>)dbSet.Where(entity).ToList();
+            dbContext.ChangeTracker.Clear();
+            dbSet.Update(entity);
         }
     }
 }

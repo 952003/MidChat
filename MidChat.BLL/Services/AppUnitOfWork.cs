@@ -1,15 +1,15 @@
-﻿using EntitiesDB.EF;
-using MidChat.BLL.Interfeces;
+﻿using MidChat.BLL.Interfeces;
+using MidChat.BLL.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MidChat.BLL.Repositories
+namespace MidChat.BLL.Services
 {
-    public class EFUnitOfWork : IUnitOfWork
+    public class AppUnitOfWork : IUnitOfWork
     {
-        private readonly MainDbContext dbContext;
+        private readonly AppDbContext dbContext;
 
         private IUsersRepository usersRepository;
 
@@ -17,7 +17,7 @@ namespace MidChat.BLL.Repositories
 
         private IGroupRepository groupRepository;
 
-        public EFUnitOfWork(MainDbContext dbContext)
+        public AppUnitOfWork(AppDbContext dbContext)
         {
             this.dbContext = dbContext;
         }
@@ -46,7 +46,7 @@ namespace MidChat.BLL.Repositories
             }
         }
 
-        public async Task SaveChangeAsync()
+        public async Task SaveChangesAsync()
         {
             await dbContext.SaveChangesAsync();
         }
@@ -73,11 +73,11 @@ namespace MidChat.BLL.Repositories
             }
         }
 
-        ~EFUnitOfWork()
+        ~AppUnitOfWork()
         {
             Dispose(false);
         }
 
-        #endregion
+        #endregion Disposable
     }
 }

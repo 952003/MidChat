@@ -14,6 +14,6 @@ namespace MidChat.BLL.Interfeces
 
         IGroupRepository GroupRepository { get; }
 
-        Task SaveChangeAsync();
+        Task SaveChangesAsync();
     }
 }

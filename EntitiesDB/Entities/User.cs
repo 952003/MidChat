@@ -4,7 +4,7 @@ using System.Text;
 
 namespace EntitiesDB.Entities
 {
-    public class User
+    public partial class User
     {
         public int Id { get; set; }
 
