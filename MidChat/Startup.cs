@@ -6,10 +6,11 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MidChat.BLL.Hubs;
+using MidChat.BLL.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace MidChat
@@ -28,6 +29,12 @@ namespace MidChat
         {
             services.AddIdentityContext(Configuration);
             services.AddIdentityDependencies();
+
+            services.AddAppDbContext(Configuration);
+            services.AddAppDbDependencies();
+            services.AddAutomapperProfiles(Assembly.GetExecutingAssembly());
+            services.AddBusinessLayerDependencies((AutoMapper.Configuration.IConfiguration)Configuration);
+
             services.AddExternalProviders(Configuration);
             services.AddSignalR();
             services.AddControllersWithViews();
@@ -45,13 +52,10 @@ namespace MidChat
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHub<ChatHub>("/chat",
-                    options => {
-                        options.ApplicationMaxBufferSize = 64;
-                        options.TransportMaxBufferSize = 64;
-                        options.LongPolling.PollTimeout = System.TimeSpan.FromMinutes(1);
-                        options.Transports = HttpTransportType.LongPolling | HttpTransportType.WebSockets;
-                    });
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapHub<ItemHub>("/itemHub");
             });
         }
     }
