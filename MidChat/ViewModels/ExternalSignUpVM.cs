@@ -5,13 +5,11 @@ using System.Threading.Tasks;
 
 namespace MidChat.ViewModels
 {
-    public class UserVM
+    public class ExternalSignUpVM
     {
-        public int Id { get; set; }
+        public string Email { get; set; }
 
-        public string Username { get; set; }
-
-        public string FirstName { get; set; }
+        public string FirsName { get; set; }
 
         public string LastName { get; set; }
     }
