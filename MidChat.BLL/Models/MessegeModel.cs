@@ -8,11 +8,11 @@ namespace MidChat.BLL.EntitiesDTO
     {
         public int Id { get; set; }
 
-        public string Text { get; set; }
+        public string Value { get; set; }
 
-        public DateTime SendTime { get; set; }
+        public DateTime CreationDate { get; set; }
 
-        public int UserSenderId { get; set; }
+        public int UserId { get; set; }
 
         public int GroupId { get; set; }
     }
